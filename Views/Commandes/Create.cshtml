@@ -1,0 +1,306 @@
+﻿@model JOACOProjectByEmNEm.ViewModels.CommandeCreate
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_AdminLayout";
+}
+
+<h1>Création d'une nouvelle commande</h1>
+<br />
+<h4>Nouvelle Commande</h4>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- Informations utilisateur -->
+            <div class="form-group">
+                <label asp-for="Prenom">Prénom :</label>
+                <input asp-for="Prenom" class="form-control" />
+                <span asp-validation-for="Prenom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nom">Nom :</label>
+                <input asp-for="Nom" class="form-control" />
+                <span asp-validation-for="Nom" class="text-danger"></span>
+            </div>
+
+            <hr />
+            <h4>Adresse Information</h4>
+
+            <!-- Adresse Information -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NumeroCivique">Numéro civique :</label>
+                <input asp-for="NumeroCivique" class="form-control" />
+                <span asp-validation-for="NumeroCivique" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomRue">Nom de la rue :</label>
+                <input asp-for="NomRue" class="form-control" />
+                <span asp-validation-for="NomRue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumeroAppartement"># Appartement (optionnel) :</label>
+                <input asp-for="NumeroAppartement" class="form-control" />
+                <span asp-validation-for="NumeroAppartement" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ville">Ville :</label>
+                <input asp-for="Ville" class="form-control" />
+                <span asp-validation-for="Ville" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pays">Pays :</label>
+                <input asp-for="Pays" class="form-control" />
+                <span asp-validation-for="Pays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CodePostal">Code Postal :</label>
+                <input asp-for="CodePostal" class="form-control" />
+                <span asp-validation-for="CodePostal" class="text-danger"></span>
+            </div>
+            <div>
+                <br />
+            </div>
+            <div class="form-group">
+                <input asp-for="SearchTerm" type="hidden" id="selected-products" class="form-control" name="SearchTerm" />
+                <span asp-validation-for="SearchTerm" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<br />
+
+<!-- Encadré pour afficher les produits -->
+<div class="row">
+    <div class="col-md-6">
+        <div id="selected-products-container" class="border rounded p-3 mb-3" style="height: 300px; overflow-y: auto;">
+            <div class="row">
+                <div class="col"># du Produit</div>
+                <div class="col">Nom du Produit</div>
+                <div class="col">Quantité</div>
+            </div>
+            <!-- Les produits seront affichés ici -->
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <!-- Barre de recherche -->
+        <div class="form-group">
+            <label for="searchTerm">Rechercher un produit :</label>
+            <input id="searchTermProduits" class="form-control" />
+            <span class="text-danger"></span>
+            <br />
+        </div>
+    </div>
+</div>
+<br />
+<!-- Encadré pour afficher les produits -->
+<div class="row">
+    <div class="col-md-6">
+        <div id="products-container" class="border rounded p-3 mb-3" style="height: 500px; overflow-y: auto;">
+            <!-- Utiliser Razor pour vérifier si la liste de produits n'est pas vide -->
+            @if (Model.Produits != null && Model.Produits.Any())
+            {
+                @foreach (var produit in Model.Produits)
+                {
+                    <div class="card mb-2" data-id="@produit.ProduitId" data-nom="@produit.ProduitNom" data-type="@produit.ProduitType" data-description="@produit.ProduitDescription" data-prix="@produit.Prix">
+                        <div class="card-body">
+                            <h5 class="card-title">@produit.ProduitNom</h5>
+                            <p class="card-text">@produit.ProduitType</p>
+                            <p class="card-text">@produit.ProduitDescription</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Aucun produit trouvé.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<br />
+
+<!-- Bouton de soumission du formulaire -->
+<div class="form-group">
+    <button type="submit" onclick="submitForm()" class="btn btn-primary">Création de la Commande</button>
+</div>
+
+<br />
+
+<div>
+    <a asp-action="Index">Retour à l'Historique des Commandes</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var idToNameMap = {};
+        $(document).ready(function () {
+            var originalProducts = $("#products-container").html();
+            populateIdToNameMap();
+            // Function to fetch products based on search term
+            $("#searchTermProduits").on("input", function () {
+                var searchTermProduits = $(this).val().toLowerCase();
+                console.log("Search term:", searchTermProduits); // Débogage
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("SearchProducts", "Commandes")",
+                    data: { searchTermProduits: searchTermProduits },
+                    success: function (response) {
+                        console.log("Response3232:", response); // Débogage
+                        $("#products-container").empty();
+                        if (response.length > 0 && searchTermProduits != "") {
+                            $.each(response, function (index, product) {
+                                console.log("Product:", product); // Débogage
+                                var productHtml = '<div class="card mb-2" data-id="' + product.produitId + '" data-nom="' + product.produitNom + '" data-type="' + product.produitType + '" data-description="' + product.produitDescription + '">';
+                                productHtml += '<div class="card-body">';
+                                productHtml += '<h5 class="card-title">' + product.produitNom + '</h5>';
+                                productHtml += '<p class="card-text">' + product.produitType + '</p>';
+                                productHtml += '<p class="card-text">' + product.produitDescription + '</p>';
+                                productHtml += '</div>';
+                                productHtml += '</div>';
+                                console.log(productHtml); //débogage
+                                $("#products-container").append(productHtml);
+                            });
+                        }
+                        else if (response.length == 0 && searchTermProduits != "") {
+                            $("#products-container").append('<p>Aucun produit trouvé.</p>');
+                        }
+                        else {
+                            resetProductsTable();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            // Function to add selected product to cart
+            $(document).on("click", "#products-container .card", function () {
+                var id = $(this).data("id");
+                var nom = $(this).data("nom");
+                var type = $(this).data("type");
+                var description = $(this).data("description");
+                console.log("Selected product:", id, nom, type, description); // Débogage
+                addToCart(id, nom, type, description);
+            });
+
+            // Function to increase product quantity
+            $(document).on("click", ".btn-primary", function () {
+                var productCard = $(this).closest('.card');
+                increaseQuantity(productCard);
+            });
+
+            // Function to decrease product quantity
+            $(document).on("click", ".btn-danger", function () {
+                var productCard = $(this).closest('.card');
+                decreaseQuantity(productCard);
+            });
+
+            // Function to remove product from cart
+            $(document).on("click", ".btn-secondary", function () {
+                var productCard = $(this).closest('.card');
+                removeProduct(productCard);
+            });
+
+            function resetProductsTable() {
+                console.log("Resetting");
+                $("#products-container").html(originalProducts);
+            }
+
+            // Function to add product to cart
+            function addToCart(id, nom, type, description) {
+                var existingProduct = $("#selected-products-container").find('[data-id="' + id + '"]');
+                if (existingProduct.length > 0) {
+                    var quantityElement = existingProduct.find('.product-quantity');
+                    var quantity = parseInt(quantityElement.text()) + 1;
+                    quantityElement.text(quantity);
+                } else {
+                    var productHtml = '<div class="card mb-2" data-id="' + id + '">';
+                    productHtml += '<div class="card-body">';
+                    productHtml += '<div class="row">';
+                    productHtml += '<div class="col">' + id + '</div>';
+                    productHtml += '<div class="col">' + nom + '</div>';
+                    productHtml += '<div class="col">';
+                    productHtml += '<span class="product-quantity">1</span>';
+                    productHtml += '<button class="btn btn-sm btn-primary mx-1">+</button>';
+                    productHtml += '<button class="btn btn-sm btn-danger mx-1">-</button>';
+                    productHtml += '<button class="btn btn-sm btn-secondary">Supprimer</button>';
+                    productHtml += '</div>';
+                    productHtml += '</div>';
+                    productHtml += '</div>';
+                    productHtml += '</div>';
+                    $("#selected-products-container").append(productHtml);
+                }
+
+                updateSelectedProducts();
+            }
+
+            // Function to increase product quantity
+            function increaseQuantity(productCard) {
+                var quantityElement = productCard.find('.product-quantity');
+                var quantity = parseInt(quantityElement.text()) + 1;
+                quantityElement.text(quantity);
+                updateSelectedProducts();
+            }
+
+            // Function to decrease product quantity
+            function decreaseQuantity(productCard) {
+                var quantityElement = productCard.find('.product-quantity');
+                var quantity = parseInt(quantityElement.text());
+                if (quantity > 1) {
+                    quantityElement.text(quantity - 1);
+                }
+                updateSelectedProducts();
+            }
+
+            // Function to remove product from cart
+            function removeProduct(productCard) {
+                productCard.remove();
+                updateSelectedProducts();
+            }
+
+            // Function to update selectedProducts
+            function updateSelectedProducts() {
+                var selectedProducts = [];
+                $("#selected-products-container .card").each(function () {
+                    var id = $(this).data("id");
+                    var nom = idToNameMap[id] || "Unknown"; // Use "Unknown" if name not found
+                    var quantity = parseInt($(this).find('.product-quantity').text()); // Get quantity
+                    selectedProducts.push({ ProduitId: id, ProduitNom: nom, StockQuantite: quantity }); // Push complete product object
+                });
+                console.log("THIS IS WHAT WE ARE SENDING OFF TO BACKEND");
+                console.log(selectedProducts);
+                $("#selected-products").val(JSON.stringify(selectedProducts));
+            }
+
+
+            function populateIdToNameMap() {
+                // Iterate over the product cards and populate the mapping
+                $("#products-container .card").each(function () {
+                    var id = $(this).data("id");
+                    var nom = $(this).data("nom");
+                    idToNameMap[id] = nom;
+                });
+            }
+
+
+        });
+        function submitForm() {
+            // Soumettre le formulaire associé
+            console.log("buttonclicked");
+            $('form').submit();
+        }
+    </script>
+}

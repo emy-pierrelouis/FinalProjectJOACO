@@ -1,0 +1,81 @@
+﻿@model IEnumerable<JOACOProjectByEmNEm.Models.Commande>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_AdminLayout";
+}
+
+<h1>Historique des Commandes</h1>
+@if(User.Identity.IsAuthenticated)
+{
+    <p>
+        <a asp-action="Create">Création d'une nouvelle commande</a>
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Commande #
+            </th>
+            <th>
+                Utilisateur
+            </th>
+            <th>
+                Produits Commandés
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Adresse de Livraison
+            </th>
+            <th>
+                Statut de Commande
+            </th>
+            <th>
+                Méthode de Paiement
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CommandeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @foreach (var produit in item.ProduitsCommandes)
+                    {
+                        <p>@produit.Quantite @produit.Produit.ProduitNom</p>
+                    }
+                </td>
+                <td>
+                    @item.DateCommande.ToShortDateString()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdresseLivraison.AdresseLivraison)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatutCommande)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MethodePaiement)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.CommandeId">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.CommandeId"><img src="icons\edit.png" width="20" alt="Edit" /></a>
+                    <a asp-action="Delete" asp-route-id="@item.CommandeId"><img src="icons\delete.png" width="20" alt="Delete" /></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

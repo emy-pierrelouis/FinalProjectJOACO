@@ -1,0 +1,93 @@
+﻿@model IEnumerable<JOACOProjectByEmNEm.ViewModels.HomeProd>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="popup" class="popup">
+    <img src="~/images/placeholderRegister2.png" alt="Registration Promotion">
+    <button class="closebtn" onclick="closePopup()">X</button>
+    <a class="btn-hotfix overlay" asp-area="Identity" asp-area="Identity" asp-page="/Account/Register">Register</a>
+</div>
+
+<div class="container">
+    <div id="homeCarousel" class="mb-5 bg-dark">
+        <div class="glide">
+            <div class="glide__track" data-glide-el="track">
+                <ul class="glide__slides d-flex justify-content-between align-items-center">
+                    <li class="glide__slide"><img class="img-fluid" src="~/images/placeholderVidGif.gif" /></li>
+                    <li class="glide__slide"><img class="img-fluid" src="~/images/placeholderPromo1.png" /></li>
+                    <li class="glide__slide"><img class="img-fluid" src="~/images/placeholderPromo2.png" /></li>
+                </ul>
+            </div>
+
+            <div class="glide__arrows" data-glide-el="controls">
+                <button class="glide__arrow glide__arrow--left" data-glide-dir="<">prev</button>
+                <button class="glide__arrow glide__arrow--right" data-glide-dir=">">next</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="homeMission" class="mt-5 mb-5">
+        <div class="d-flex justify-content-center">
+            <div class="col text-center">
+                <div><img src="~/images/joacologo.png" width="300" /><hr /></div>
+                <div><h2>Notre Mission</h2></div>
+                <div><p>Faire en sorte que toutes les personnes ressentent une confiance avec l'odeur de leurs souliers.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="homeProd" class="mt-5 mb-5 bg-dark">
+        <div class="row d-flex justify-content-around p-4">
+
+            @foreach (var prod in Model)
+            {
+                <div class="col-6 col-md-3 col-lg d-flex align-items-stretch">
+                    <div class="card mb-7 produit" data-toggle="card-collapse">
+
+                        @foreach (var pic in prod.Media)
+                        {
+                            <a asp-controller="Shop" asp-action="Details" asp-route-id="@prod.ProduitId">
+                                <img class="img-fluid" src="~/media/@pic.MediaChemin" class="card-img-top">
+                            </a>
+                        }
+
+                        <div class="card-collapse-parent">
+                            <div class="card-body px-0 bg-white text-center">
+
+                                <div class="mb-1 fw-bold">
+                                    <a class="text-body" href="#">@Html.DisplayFor(modelItem => prod.ProduitNom)</a>
+                                </div>
+
+                                <div class="mb-1 fw-bold text-muted">
+                                    @Html.DisplayFor(modelItem => prod.Prix)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-collapse collapse">
+                            <div class="card-footer px-0 pt-0 bg-white text-center">
+                                <button class="btn btn-xs btn-link btn-circle" data-toggle="button">
+                                    <i class="fe fe-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div id="homeBlog" class="mt-5">
+        <div>
+            @* <p>this section would be for the blog.</p> *@
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@@glidejs/glide"></script>
+<script>
+    new Glide('.glide').mount()
+</script>

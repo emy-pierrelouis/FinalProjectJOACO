@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@glidejs/glide": "^3.6.0",
+    "material-dashboard": "^3.0.9"
+  }
+}

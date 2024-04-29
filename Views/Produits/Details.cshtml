@@ -1,0 +1,67 @@
+﻿@model JOACOProjectByEmNEm.Models.Produit
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "_AdminLayout";
+}
+
+<nav aria-label="breadcrumb">
+    <h1 class="font-weight-bolder mb-0">Details</h1>
+</nav>
+
+<h1>@Html.DisplayFor(model => model.ProduitNom)</h1>
+
+<div>
+    <div class="container-fluid px-xl-0">
+        <div class="row align-items-center mx-xl-0">
+
+            @foreach (var pic in Model.Media)
+            {
+                <div class="col-12 col-lg-6 col-xl-5 py-4 py-xl-0 px-xl-0">
+                    <img src="~/media/@pic.MediaChemin" class="detResize" alt="...">
+                </div>
+            }
+
+            <div class="col-12 col-lg-6 col-xl-7 py-9 px-md-9">
+                <dl>
+                    <dt class="col-sm-2">
+                        Type de produit:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ProduitType)
+                    </dd>
+                    <dt class="col-sm-2">
+                        Description:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ProduitDescription)
+                    </dd>
+                    <dt class="col-sm-2">
+                        Prix:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Prix)
+                    </dd>
+                    <dt class="col-sm-2">
+                        Quantité en Stock
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StockQuantite)
+                    </dd>
+                    <dt class="col-sm-2">
+                        Disponibilité en inventaire:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StatutDispo)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ProduitId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

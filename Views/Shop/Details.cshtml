@@ -1,0 +1,110 @@
+﻿@model JOACOProjectByEmNEm.ViewModels.ProdCatalog
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>@Html.DisplayFor(model => model.ProduitType)</h1>
+
+<div>
+    <div class="container-fluid px-xl-0">
+        <div class="row align-items-center mx-xl-0">
+
+            @foreach (var pic in Model.Media)
+            {
+                <div class="col-12 col-lg-6 col-xl-5 py-4 py-xl-0 px-xl-0">
+                    <img class="card-img-top" src="~/media/@pic.MediaChemin" alt="...">
+                </div>
+            }
+
+            <div class="col-12 col-lg-6 col-xl-7 py-9 px-md-9">
+                <h3 class="mb-2">@Html.DisplayFor(model => model.ProduitNom)</h3>
+
+                <div class="mb-7">
+                    <span class="h5">@Html.DisplayFor(model => model.Prix)</span>
+                    <span class="fs-sm">(@Html.DisplayFor(model => model.StatutDispo))</span>
+                </div>
+
+                <form>
+                    <div class="form-group">
+                        <p><span class="text-gray-500">@Html.DisplayFor(model => model.Description)</span></p>
+                    </div>
+                    <div class="form-group mb-0">
+                        <div class="row gx-5">
+                            <div class="col-12 col-lg-auto">
+                                <input id="number" type="number" min="1" value="1" class="form-control mb-2" />
+                            </div>
+
+                            <div class="col-12 col-lg">
+                                <button type="submit" id="addToCart" class="btn w-100 btn-dark mb-2">
+                                    Add to Cart <i class="fe fe-shopping-cart ms-2"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-12 col-lg-auto">
+                                <button class="btn btn-outline-dark w-100 mb-2" data-toggle="button">
+                                    Wishlist <i class="fe fe-heart ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Retour au catalogue</a>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Retrieve existing cart items from local storage, or initialize an empty array
+            var shoppingItems = JSON.parse(localStorage.getItem('shoppingItems')) || [];
+
+            // Function to update the cart notification
+            function updateCartButtonNotification() {
+                var cartNotification = $('.cart-notification');
+                cartNotification.text(shoppingItems.length);
+            }
+
+            // Event handler for the "Add to Cart" button
+            $('#addToCart').click(function () {
+                var productName = '@Html.DisplayFor(model => model.ProduitNom)';
+                var productPrice = '@Html.DisplayFor(model => model.Prix)';
+
+                console.log('Adding product to cart:');
+                console.log('Product Name:', productName);
+                console.log('Product Price:', productPrice);
+
+                // Check if the product already exists in the cart
+                var exists = shoppingItems.some(function (item) {
+                    return item.name === productName;
+                });
+
+                if (!exists) {
+                    // Add the product to the shoppingItems array
+                    shoppingItems.push({ name: productName, price: productPrice });
+
+                    // Update the shoppingItems array in local storage
+                    localStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
+
+                    console.log('Shopping Items:', shoppingItems);
+
+                    // Update the cart notification
+                    updateCartButtonNotification();
+                } else {
+                    console.log('Product already exists in the cart:', productName);
+                }
+            });
+
+            // Initialize cart notification
+            updateCartButtonNotification();
+        });
+    </script>
+}

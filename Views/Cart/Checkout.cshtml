@@ -1,0 +1,239 @@
+﻿@model JOACOProjectByEmNEm.ViewModels.CommandeCreate
+
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <section>
+        <h2>Débit/Crédit</h2>
+
+        <div class="frame-container">
+            <form id="payment-form" method="post" asp-action="ProcessPayment">
+                <div id="payment-element" class="stripe-element">
+                    <!--Stripe.js injects the Payment Element-->
+                </div>
+                <div>
+                    <label for="cardType"><strong>Card Type:</strong></label>
+                    <select id="cardType" name="cardType">
+                        <option value="visa">Visa</option>
+                        <option value="mastercard">Mastercard</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="postalCode"><strong>Postal Code:</strong></label>
+                    <input type="text" id="postalCode" name="postalCode" maxlength="7" required>
+                    <span id="postalCodeError" style="color: red; display: none;">Please enter a valid Canadian postal code</span>
+                </div>
+                <button id="submit">
+                    <div class="spinner hidden" id="spinner"></div>
+                    <span id="button-text">Pay now</span>
+                </button>
+                <!-- Add a hidden div for displaying payment status -->
+                <div id="paymentStatus" style="display: none;"></div>
+                <div id="payment-message">@ViewBag.Message</div>
+            </form>
+        </div>
+    </section>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Formulaire pour l'Adresse de Livraison -->
+            <form asp-action="SubmitAddress" id="adressForm" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <!-- Section de l'Adresse de Livraison -->
+                <section>
+                    <h2>Adresse de Livraison</h2>
+                    <div class="form-group">
+                        <label asp-for="Prenom">Prénom :</label>
+                        <input asp-for="Prenom" class="form-control" />
+                        <span asp-validation-for="Prenom" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Nom">Nom :</label>
+                        <input asp-for="Nom" class="form-control" />
+                        <span asp-validation-for="Nom" class="text-danger"></span>
+                    </div>
+                    <!-- Adresse Information -->
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="NumeroCivique">Numéro civique :</label>
+                        <input asp-for="NumeroCivique" class="form-control" />
+                        <span asp-validation-for="NumeroCivique" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NomRue">Nom de la rue :</label>
+                        <input asp-for="NomRue" class="form-control" />
+                        <span asp-validation-for="NomRue" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NumeroAppartement"># Appartement (optionnel) :</label>
+                        <input asp-for="NumeroAppartement" class="form-control" />
+                        <span asp-validation-for="NumeroAppartement" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Ville">Ville :</label>
+                        <input asp-for="Ville" class="form-control" />
+                        <span asp-validation-for="Ville" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Pays">Pays :</label>
+                        <input asp-for="Pays" class="form-control" />
+                        <span asp-validation-for="Pays" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CodePostal">Code Postal :</label>
+                        <input asp-for="CodePostal" class="form-control" />
+                        <span asp-validation-for="CodePostal" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="SearchTerm" type="hidden" id="selected-products" class="form-control" name="SearchTerm" />
+                        <span asp-validation-for="SearchTerm" class="text-danger"></span>
+                    </div>
+                </section>
+
+                <!-- Bouton pour Soumettre l'Adresse -->
+                <button class="btn-hotfix btn-primary" type="submit" id="OrderSubmit" onclick="submitForm()">Order</button>
+                <button class="btn-hotfix btn-primary" type="button" id="cancelButton" onclick="cancelOrder()">Cancel</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Div pour afficher d'autres éléments à droite du formulaire -->
+            <!-- Ajoutez ici vos autres éléments -->
+        </div>
+    </div>
+
+    @section Scripts
+    {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+        <script>
+            var stripe = Stripe('pk_test_51OtzTtRvORBUw6jttWdeax2gw40p4PDpYaTtyr5bTIN6R6M7wNQpWMkXjxjWYfJ15Rk6jk0FmhaLeclxIz5lmH0v00t1MND4rI');
+            var elements = stripe.elements({
+                locale: 'en-CA' // Set the locale to Canada (English)
+            });
+
+            var style = {
+                base: {
+                    fontSize: '16px', // Example font size
+                    color: '#32325d', // Example text color
+                    fontFamily: 'Arial, sans-serif', // Example font family
+                    // Add any other base styles as needed
+                }
+            };
+
+            var cardElement = elements.create('card', {
+                style: style,
+                classes: {
+                    base: 'stripe-element-base-class',
+                    focus: 'stripe-element-focus-class',
+                    empty: 'stripe-element-empty-class',
+                    invalid: 'stripe-element-invalid-class'
+                },
+                // Hide the postal code field
+                hidePostalCode: true
+            });
+            cardElement.mount('#payment-element');
+
+            var form = document.getElementById('payment-form');
+            var submitButton = document.getElementById('submit');
+            var spinner = document.getElementById('spinner');
+            var buttonText = document.getElementById('button-text');
+            var paymentMessage = document.getElementById('payment-message');
+
+            submitButton.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                // Disable the submit button to prevent multiple submissions
+                submitButton.disabled = true;
+                buttonText.textContent = 'Processing...';
+                spinner.classList.remove('hidden');
+
+                // Retrieve the postal code input value
+                var postalCodeInput = document.getElementById('postalCode').value;
+
+                // Check if the postal code is valid
+                if (!isValidCanadianPostalCode(postalCodeInput)) {
+                    // Show error message
+                    paymentMessage.textContent = 'Please enter a valid Canadian postal code';
+                    paymentMessage.classList.add('error');
+
+                    // Re-enable the submit button and hide the spinner
+                    submitButton.disabled = false;
+                    buttonText.textContent = 'Pay now';
+                    spinner.classList.add('hidden');
+
+                    // Exit the function to prevent further processing
+                    return;
+                }
+
+                // Proceed with token creation if the postal code is valid
+                stripe.createToken(cardElement).then(function (result) {
+                    if (result.error) {
+                        // Inform the user if there was an error
+                        paymentMessage.textContent = result.error.message;
+                        paymentMessage.classList.add('error');
+                    } else {
+                        // Send the token to your server to process the payment
+                        stripeTokenHandler(result.token);
+                    }
+
+                    // Re-enable the submit button and hide the spinner
+                    submitButton.disabled = false;
+                    buttonText.textContent = 'Pay now';
+                    spinner.classList.add('hidden');
+                });
+            });
+
+            function stripeTokenHandler(paymentIntentId) {
+                // Add the PaymentIntent ID to the form data and submit the form
+                var hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'paymentIntentId');
+                hiddenInput.setAttribute('value', paymentIntentId);
+                form.appendChild(hiddenInput);
+
+                // Submit the form
+                $('#payment-form').submit();
+            }
+            function isValidCanadianPostalCode(postalCode) {
+                // Regular expression for Canadian postal codes
+                var canadianPostalCodeRegex = /^[ABCEGHJKLMNPRSTVXY]\d[A-Z] \d[A-Z]\d$/i;
+                return canadianPostalCodeRegex.test(postalCode);
+            }
+        </script>
+
+        <script>
+            function ViewBagCheck() {
+                console.log("1 " + '@ViewBag');
+                console.log("2 " + '@ViewBag.Message');
+            }
+
+            function selectedProducts() {
+                var shoppingItems = JSON.parse(localStorage.getItem('finalinfo'));
+                $("#selected-products").val(JSON.stringify(shoppingItems));
+            }
+
+            function submitForm() {
+                // Soumettre le formulaire associé
+                selectedProducts();
+                //here we clear the two local storages
+                localStorage.removeItem('finalinfo');
+                localStorage.removeItem('shoppingItems');
+                console.log("buttonclicked");
+                $('#adressForm').submit();
+            }
+
+            function cancelOrder() {
+                // Supprimer l'élément 'finalinfo' du stockage local
+                localStorage.removeItem('finalinfo');
+                // Rediriger vers la page du magasin
+                window.location.href = '/Shop';
+            }
+        </script>
+
+    }

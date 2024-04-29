@@ -1,0 +1,53 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "~/Areas/Identity/Pages/_IdLayout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="card card-lg mb-10 mb-md-0">
+    <div class="card-body">
+        <form id="account" method="post">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Input.Email" class="visually-hidden" for="loginEmail">Email Address *</label>
+                        <input asp-for="Input.Email" class="form-control form-control-sm" id="loginEmail" type="email" autocomplete="username" aria-required="true" placeholder="Email" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Input.Password" class="visually-hidden" for="loginPassword">Password *</label>
+                        <input asp-for="Input.Password" class="form-control form-control-sm" id="loginPassword" type="password" autocomplete="current-password" aria-required="true" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="col-12 col-md">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input asp-for="Input.RememberMe" class="form-check-input" id="loginRemember" type="checkbox">
+                            <label asp-for="Input.RememberMe" class="form-check-label" for="loginRemember">@Html.DisplayNameFor(m => m.Input.RememberMe)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-auto">
+                    <div class="form-group">
+                        <a class="fs-sm text-reset" data-bs-toggle="modal" id="forgot-password" asp-page="./ForgotPassword">Forgot Password?</a>
+                    </div>
+                    <div class="form-group">
+                        <a class="fs-sm text-reset" data-bs-toggle="modal" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                    </div>
+                    <div class="form-group">
+                        <a class="fs-sm text-reset" data-bs-toggle="modal" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">No account? Register as a new user.</a>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Sign In</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

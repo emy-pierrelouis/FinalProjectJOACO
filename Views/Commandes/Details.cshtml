@@ -1,0 +1,164 @@
+﻿@model JOACOProjectByEmNEm.Models.Commande
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "_AdminLayout";
+}
+
+<h1>Facture de Commande</h1>
+
+<div>
+    <h4>Informations de Commande</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            Numéro de Commande :
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.CommandeId)
+        </dd>
+        <dt class="col-sm-3">
+            Utilisateur :
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.IdNavigation.UserName)
+        </dd>
+        <dt class="col-sm-3">
+            Date de Commande :
+        </dt>
+        <dd class="col-sm-9">
+            @Model.DateCommande.ToShortDateString()
+        </dd>
+        <dt class="col-sm-3">
+            Adresse de Livraison :
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.AdresseLivraison.AdresseLivraison)
+        </dd>
+        <dt class="col-sm-3">
+            Statut de Commande :
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.StatutCommande)
+        </dd>
+        <dt class="col-sm-3">
+            Méthode de Paiement :
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.MethodePaiement)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Détails de la Commande</h4>
+    <hr />
+    <table class="table" id="order-details-table">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix Unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produitCommande in Model.ProduitsCommandes)
+            {
+                <tr>
+                    <td>@produitCommande.Produit.ProduitNom</td>
+                    <td class="quantity">@produitCommande.Quantite</td>
+                    <td class="price">@produitCommande.Produit.Prix.ToString("0.00$")</td>
+                    <td class="total">@((produitCommande.Quantite * produitCommande.Produit.Prix).ToString("0.00$"))</td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Total: </td>
+                <td>
+                    <div id="total-row">
+                        <!-- La ligne totale sera ajoutée dynamiquement en utilisant JavaScript -->
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Tax: </td>
+                <td>
+                    <div id="tax-row">
+                        <!-- La ligne totale sera ajoutée dynamiquement en utilisant JavaScript -->
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Shipping Fees: </td>
+                <td>
+                    <div id="shipping-row">
+                        <!-- La ligne totale sera ajoutée dynamiquement en utilisant JavaScript -->
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Grand Total: </td>
+                <td>
+                    <div id="grandtotal-row">
+                        <!-- La ligne totale sera ajoutée dynamiquement en utilisant JavaScript -->
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a asp-action="Index">Retour à l'Historique des Commandes</a>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialisation des totaux
+            var totalQuantity = 0;
+            var totalPriceUnit = 0;
+
+            // Parcourir chaque ligne du tableau
+            $('#order-details-table tbody tr').each(function () {
+                var quantity = parseInt($(this).find('.quantity').text().trim()); // Récupérer la quantité
+                var priceUnit = parseFloat($(this).find('.price').text().trim()); // Récupérer le prix unitaire
+
+                // Vérifier si les valeurs récupérées sont valides
+                if (!isNaN(quantity) && !isNaN(priceUnit)) {
+                    totalQuantity += quantity; // Ajouter la quantité au total
+                    totalPriceUnit += (quantity * priceUnit); // Ajouter le produit de la quantité et du prix unitaire au total
+                }
+            });
+
+            // Afficher les totaux
+            var totalRow = totalPriceUnit.toFixed(2);
+            //tax
+            var taxTotal = totalPriceUnit * 0.15;
+            var taxRow = taxTotal.toFixed(2);
+            //shipping
+            var shippingTotal = totalPriceUnit >= 80 ? 0 : 10;
+            var shippingRow = shippingTotal.toFixed(2);
+            //grandtotal
+            var grandtotal = totalPriceUnit + taxTotal;
+            var grandRow = grandtotal.toFixed(2);
+            $('#total-row').html(totalRow + '$');
+            $('#tax-row').html(taxRow + '$');
+            $('#shipping-row').html(shippingRow + '$');
+            $('#grandtotal-row').html(grandRow + '$');
+
+
+        });
+    </script>
+}

@@ -1,0 +1,259 @@
+﻿@model IEnumerable<JOACOProjectByEmNEm.ViewModels.ProdCatalog>
+
+<h1>Catalogue de Produits</h1>
+
+<div class="btn-group-justified btn-group-expand-lg mb-10" role="group">
+    <div id="checkFiltre" class="btn-group dropdown">
+
+        <button class="btn btn-sm w-25 btn-outline-border dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside">
+            Sort By
+        </button>
+
+        <form class="dropdown-menu w-25">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkAll" name="produitType" value="all" checked>
+                            <label for="all">Tous les produits</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkBundle" name="produitType" value="bundle">
+                            <label for="bundle">Bundles</label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkCream" name="produitType" value="cream">
+                            <label for="cream">Crèmes</label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkDeo" name="produitType" value="deodorant">
+                            <label for="deodorant">Déodorants</label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkExf" name="produitType" value="exfoliant">
+                            <label for="exfoliant">Exfoliants</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkPerf" name="produitType" value="perfume">
+                            <label for="perfume">Parfums</label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkSoap" name="produitType" value="soap">
+                            <label for="soap">Savons</label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+                            <input type="checkbox" id="checkSocks" name="produitType" value="socks">
+                            <label for="socks">Chausettes</label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+                            <input type="checkbox" id="checkSpray" name="produitType" value="spray">
+                            <label for="spray">Aérosols</label>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group-overflow">
+                        <div class="form-check mb-3">
+
+                            <input type="checkbox" id="checkTools" name="produitType" value="tools">
+                            <label for="tools">Outils</label>
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex flex-nowrap border-top">
+                        <button class="btn btn-outline-dark btn-sm" type="reset">
+                            Clear
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<section class="py-12">
+    <div class="container">
+        <div class="row">
+
+                @foreach (var prod in Model)
+                {
+                    <div class="col-6 col-md-3">
+                        <div class="card mb-7 produit" data-toggle="card-collapse">
+
+                            @foreach (var pic in prod.Media)
+                            {
+                            <a asp-controller="Shop" asp-action="Details" asp-route-id="@prod.ProduitId">
+                                    <img class="card-img-top" src="~/media/@pic.MediaChemin" alt="..." class="card-img-top">
+                                </a>
+                            }
+
+                            <div class="card-collapse-parent">
+                                <div class="card-body px-0 bg-white text-center">
+
+                                    <div class="mb-1 fw-bold">
+                                        <a class="text-body" href="#">@Html.DisplayFor(modelItem => prod.ProduitNom)</a>
+                                    </div>
+
+                                    <div class="mb-1 fw-bold text-muted typeSelect">
+                                        @Html.DisplayFor(modelItem => prod.ProduitType)
+                                    </div>
+
+                                    <div class="mb-1 fw-bold text-muted priceSelect">
+                                        @Html.DisplayFor(modelItem => prod.Prix)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-collapse collapse">
+                                <div class="card-footer px-0 pt-0 bg-white text-center">
+                                    <button class="btn btn-xs btn-link btn-circle fe-shopping-cart-btn" data-bs-target="#modalShoppingCart">
+                                        <i class="fe fe-shopping-cart"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-link btn-circle" data-toggle="button">
+                                        <i class="fe fe-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            var shoppingItems = [];
+
+            function updateCartButtonNotification(count) {
+
+                var cartNotification = $('.cart-notification');
+                cartNotification.text(count); 
+            }
+
+            $('.fe-shopping-cart-btn').click(function () {
+
+                var card = $(this).closest('.card');
+
+                var productName = card.find('.text-body').text();
+                var productPrice = card.find('.priceSelect').text();
+
+                console.log('Adding product to cart:');
+                console.log('Product Name:', productName);
+                console.log('Product Price:', productPrice);
+
+                var exists = shoppingItems.some(function (item) {
+                    return item.name === productName;
+                });
+
+                if (exists) {
+                    console.log('Product already exists in the cart:', productName);
+                } else {
+                    shoppingItems.push({ name: productName, price: productPrice });
+
+                    localStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
+
+                    console.log('Shopping Items:', shoppingItems);
+
+                    updateCartButtonNotification(shoppingItems.length);
+                }
+            });
+
+            function displayCartItems() {
+
+                var shoppingItems = JSON.parse(localStorage.getItem('shoppingItems'));
+                console.log(shoppingItems);
+
+                var cartContainer = $('#modalShoppingCart .cart-items');
+
+                if (!shoppingItems || shoppingItems.length === 0) {
+                    
+                    cartContainer.html('<p>Cart is empty</p>');
+                    return 0; 
+                } else {
+                    cartContainer.empty();
+
+                    shoppingItems.forEach(function (item) {
+                        var productName = item.name;
+                        var productPrice = item.price;
+                        var productHtml = '<div class="product">' +
+                            '<p>Product Name: ' + productName + '</p>' +
+                            '<p>Price: ' + productPrice + '</p>' +
+                            '</div>';
+                        cartContainer.append(productHtml);
+                    });
+
+                    return shoppingItems.length;
+                }
+            }
+
+
+            var itemCount = displayCartItems();
+            updateCartButtonNotification(itemCount);
+
+
+            $('#clearCartBtn').click(function () {
+
+                localStorage.removeItem('shoppingItems');
+
+                $('#modalShoppingCart .cart-items').html('<p>Cart is empty</p>');
+
+                updateCartButtonNotification(0);
+
+                shoppingItems = [];
+            });
+
+            $('#modalShoppingCart').on('show.bs.offcanvas', function () {
+                var itemCount = displayCartItems();
+                updateCartButtonNotification(itemCount);
+            });
+        });
+    </script>
+
+    <script src="js/procheckfilter.js"></script>
+    <script src="~/assets/assets/js/vendor.bundle.js"></script>
+    <script src="~/assets/assets/js/theme.bundle.js"></script>
+}

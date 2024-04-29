@@ -1,0 +1,97 @@
+﻿@model JOACOProjectByEmNEm.ViewModels.MediaViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_AdminLayout";
+}
+
+<nav aria-label="breadcrumb">
+    <h1 class="font-weight-bolder mb-0">Create</h1>
+</nav>
+
+<h4>Produit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <div class="form-group">
+                <label asp-for="InventaireId" class="control-label"></label>
+                <select asp-for="InventaireId" class ="form-control" asp-items="ViewBag.InventaireId" class="disabled"></select>
+            </div> *@
+
+            <div class="form-group">
+                <label asp-for="ProduitNom" class="control-label">Nom du produit: </label>
+                <input asp-for="ProduitNom" class="form-control" />
+                <span asp-validation-for="ProduitNom" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProduitType">Type du produit: </label>
+                <input asp-for="ProduitType" list="createType" class="form-control" />
+                <datalist id="createType">
+                    <option value="bundle">Bundles</option>
+                    <option value="deodorant">Déodorant</option>
+                    <option value="cream">Crème</option>
+                    <option value="exfoliant">Exfoliant</option>
+                    <option value="perfume">Parfum</option>
+                    <option value="soap">Savon</option>
+                    <option value="socks">Chausettes</option>
+                    <option value="spray">Aéorsol</option>
+                    <option value="tools">Outils</option>
+                </datalist>
+                <span asp-validation-for="ProduitType" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="ProduitDescription">Description du produit: </label>
+                <input asp-for="ProduitDescription" class="form-control" />
+                <span asp-validation-for="ProduitDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Prix" class="control-label">Prix du produit: </label>
+                <input asp-for="Prix" class="form-control" />
+                <span asp-validation-for="Prix" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StockQuantite" class="control-label">Nombre de produit en inventaire: </label>
+                <input asp-for="StockQuantite" class="form-control" type="number" min="1" />
+                <span asp-validation-for="StockQuantite" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StatutDispo">Statut du produit: </label>
+                <input asp-for="StatutDispo" list="createStatus" class="form-control" />
+                <datalist id="createStatus">
+                    <option value="Disponible">In Stock</option>
+                    <option value="Indisponible">Out of Stock</option>
+                </datalist>
+                <span asp-validation-for="StatutDispo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group input-field">
+                <label asp-for="ProduitImg" class="control-label">Image du produit: </label>
+                <input type="file" asp-for="ProduitImg" class="form-control" accept="image" />
+                <span asp-validation-for="ProduitImg" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="MediaDescription" class="control-label">Alt-Text </label>
+                <input asp-for="MediaDescription" class="form-control" />
+                <span asp-validation-for="MediaDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn-hotfix btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

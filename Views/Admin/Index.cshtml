@@ -1,0 +1,66 @@
+﻿@model JOACOProjectByEmNEm.ViewModels.AdminDashboard
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h1>Welcome, @ViewData["Prenom"]!</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="outOfStock">
+                <h2>Out of Stock</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Identifiant</th>
+                            <th>Nom du produit</th>
+                            <th>Type du produit</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.ProduitNonDispo)
+                        {
+                            <tr>
+                                <td>@order.ProduitId</td>
+                                <td>@order.ProduitNom</td>
+                                <td>@order.ProduitType</td>
+                                <td>@order.StatutDispo</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="lowStock">
+                <h2>Low in Stock</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Identifiant</th>
+                            <th>Nom du produit</th>
+                            <th>Type du produit</th>
+                            <th>Stock Quantité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.ProduitLowStock)
+                        {
+                            <tr>
+                                <td>@order.ProduitId</td>
+                                <td>@order.ProduitNom</td>
+                                <td>@order.ProduitType</td>
+                                <td>@order.StockQuantite</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

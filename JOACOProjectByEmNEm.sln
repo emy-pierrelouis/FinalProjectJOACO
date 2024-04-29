@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JOACOProjectByEmNEm", "JOACOProjectByEmNEm.csproj", "{CC28773A-1851-4943-BB8C-DB496C7CBAE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC28773A-1851-4943-BB8C-DB496C7CBAE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC28773A-1851-4943-BB8C-DB496C7CBAE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC28773A-1851-4943-BB8C-DB496C7CBAE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC28773A-1851-4943-BB8C-DB496C7CBAE7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF6E1613-779C-41A6-BF31-23175C720370}
+	EndGlobalSection
+EndGlobal

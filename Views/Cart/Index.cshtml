@@ -1,0 +1,188 @@
+﻿@model IEnumerable<JOACOProjectByEmNEm.Models.Commande>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Shopping Cart</h1>
+
+<div class="cart-items">
+    <table class="table" id="cart-items-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody id="modalProducts">
+            <!-- Elements from modal shopping cart will be appended here -->
+        </tbody>
+    </table>
+</div>
+
+<div class="checkoutPrice">
+    <table class="table2">
+        <tr>
+            <td colspan="2">Order Summary</td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td id="totalId"></td>
+        </tr>
+        <tr>
+            <td>Shipping Fees</td>
+            <td id="shippingId"></td>
+        </tr>
+        <tr>
+            <td>Taxes</td>
+            <td id="taxesId"></td>
+        </tr>
+        <tr>
+            <td><strong>Order Total</strong></td>
+            <td id="orderTotalId"><strong></strong></td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="checkout-btn">
+    <a class="btn btn-primary" href="@Url.Action("Checkout", "Cart")">Checkout</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            displayCartItems();
+
+            function displayCartItems() {
+
+                var shoppingItems = JSON.parse(localStorage.getItem('shoppingItems'));
+                console.log("inside checkout shopping cart:" + shoppingItems);
+
+                var cartContainer = $('#modalProducts');
+
+                if (!shoppingItems || shoppingItems.length === 0) {
+
+                    cartContainer.html('<tr><td colspan="5">Cart is empty</td></tr>');
+                } else {
+
+                    cartContainer.empty();
+
+                    shoppingItems.forEach(function (item) {
+                        var productName = item.name;
+                        var productPrice = item.price;
+                        var productHtml = '<tr class="product">' +
+                            '<td>' + productName + '</td>' +
+                            '<td>' +
+                            '<div class="input-group">' +
+                            '<select class="form-select quantity-dropdown">' +
+                            '<option value="1">1</option>' +
+                            '<option value="2">2</option>' +
+                            '<option value="3">3</option>' +
+                            '<option value="4">4</option>' +
+                            '</select>' +
+                            '</div>' +
+                            '</td>' +
+                            '<td>' + productPrice + '</td>' +
+                            '<td class="product-total"></td>' + 
+                            '<td><button type="button" class="btn btn-danger remove-product">X</button></td>' + 
+                            '</tr>';
+                        cartContainer.append(productHtml);
+                    });
+                }
+            }
+
+            function calculateProductTotal() {
+                $('.table tbody tr').each(function () {
+                    var quantity = parseInt($(this).find('.quantity-dropdown').val());
+                    var price = parseFloat($(this).find('td:nth-child(3)').text().trim());
+                    var total = quantity * price;
+                    $(this).find('.product-total').text(total.toFixed(2));
+                });
+                console.log("Product total calculated");
+            }
+
+            calculateProductTotal();
+
+            function calculateOrderTotal() {
+                var subtotal = 0;
+                $('.table tbody tr').each(function () {
+                    var quantity = parseInt($(this).find('.quantity-dropdown').val());
+                    var price = parseFloat($(this).find('td:nth-child(3)').text().trim());
+                    var total = quantity * price;
+
+                    console.log("Quantity:", quantity);
+                    console.log("Price:", price);
+                    console.log("Total:", total);
+
+                    subtotal += total;
+                });
+
+                var taxes = subtotal * 0.15;
+                var shippingFees = (subtotal >= 80) ? 0 : 15;
+                var grandTotal = subtotal + taxes + shippingFees;
+
+                $('#totalId').text(subtotal.toFixed(2));
+                $('#taxesId').text(taxes.toFixed(2));
+                $('#shippingId').text(shippingFees.toFixed(2));
+                $('#orderTotalId').text(grandTotal.toFixed(2));
+                console.log("Order totals calculated");
+            }
+
+            calculateOrderTotal();
+
+            $('.checkout-btn a').click(function (e) {
+                e.preventDefault();
+
+                var finalInfo = [];
+
+                $('.table tbody tr').each(function () {
+                    var productName = $(this).find('td:first-child').text().trim();
+                    var quantity = parseInt($(this).find('.quantity-dropdown').val());
+
+                    finalInfo.push({
+                        ProduitNom: productName,
+                        StockQuantite: quantity,
+                    });
+                });
+
+                localStorage.setItem('finalinfo', JSON.stringify(finalInfo));
+
+                console.log("Checkout button clicked");
+                window.location.href = '/Cart/Checkout';
+            });
+
+            $('.quantity-dropdown').change(function () {
+                calculateProductTotal();
+                calculateOrderTotal();
+            });
+
+            $(document).on('click', '.remove-product', function () {
+                console.log("Remove button clicked");
+
+                var productRow = $(this).closest('.product');
+
+                var shoppingItems = JSON.parse(localStorage.getItem('shoppingItems'));
+
+                var index = $('.product').index(productRow);
+
+                if (index !== -1) {
+                    shoppingItems.splice(index, 1);
+
+                    localStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
+                }
+
+                productRow.remove();
+
+                calculateProductTotal();
+                calculateOrderTotal();
+            });
+
+            console.log('Modal Shopping Cart HTML:', $('#modalShoppingCart').html());
+        });
+    </script>
+}

@@ -1,0 +1,120 @@
+﻿@model IEnumerable<JOACOProjectByEmNEm.Models.Produit>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_AdminLayout";
+}
+
+<h1>Liste de produits</h1>
+
+<p>
+    <a asp-action="Create">Ajouter Un Produit</a>
+</p>
+
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Erreur"]
+    </div>
+}
+
+<div>
+    <div id="proSearch">
+        <label for="proSeaNom">Trouver un produit</label>
+        <input type="search" id="proSeaNom" data-search />
+    </div>
+
+    <div class="filterdrop">
+        <div id="proFiltre" class="dropdown-content">
+            <label for="types">Type de produits: </label>
+            <select id="proFilType" onchange="filtrerParType()">
+                <option value="all">Tous les produits</option>
+                <option value="bundle">Bundles</option>
+                <option value="cream">Crèmes</option>
+                <option value="deodorant">Déodorants</option>
+                <option value="exfoliant">Exfoliants</option>
+                <option value="perfume">Parfums</option>
+                <option value="soap">Savons</option>
+                <option value="socks">Chausettes</option>
+                <option value="spray">Aérosols</option>
+                <option value="tools">Outils</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Nom du produit
+            </th>
+            <th>
+                Type de produit
+            </th>
+            <th>
+                Prix du produit
+            </th>
+            <th>
+                Description du produit
+            </th>
+            <th>
+                Quantité en stock
+            </th>
+            <th>
+                Images
+            </th>
+            <th>
+                Disponibilité en stock
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="filtre">
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProduitId)
+                </td>
+                <td class="nomSelect">
+                    @Html.DisplayFor(modelItem => item.ProduitNom)
+                </td>
+                <td class="typeSelect">
+                    @Html.DisplayFor(modelItem => item.ProduitType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prix)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProduitDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StockQuantite)
+                </td>
+                <td>
+                    @foreach (var pic in item.Media)
+                    {
+                        <img class="indResize" src="~/media/@pic.MediaChemin"/>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatutDispo)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ProduitId">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.ProduitId"><img src="icons\edit.png" width="20" alt="Edit" /></a>
+                    <a asp-action="Delete" asp-route-id="@item.ProduitId"><img src="icons\delete.png" width="20" alt="Delete" /></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="js/protypefilter.js"></script>
+<script src="js/prosearchfilter.js"></script>

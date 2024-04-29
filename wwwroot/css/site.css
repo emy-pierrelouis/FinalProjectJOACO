@@ -1,0 +1,248 @@
+/* Pre-Generated */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Pop-up */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+    .popup img {
+        width: 100%;
+        height: auto;
+    }
+
+.closebtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #999;
+    z-index: 1000;
+}
+
+    .closebtn:hover {
+        color: #333;
+    }
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+/* FAQ */
+.faq {
+    cursor: crosshair;
+    height: 310px;
+    overflow-y: scroll;
+}
+
+.question {
+    transition: 0.5s;
+    padding: 5px 20px 5px 20px;
+    width: 70%;
+}
+
+    .question:hover {
+        background-color: #000f;
+        color: #ffffff;
+        border-radius: 20px;
+        transform: scale(0.9);
+    }
+
+.answer {
+    background-color: #808080;
+    font-style: italic;
+    margin-left: 20px;
+    padding: 5px 20px 5px 20px;
+    display: none;
+    width: 80%
+}
+
+
+/* Stripe & Checkout */
+/* Styles pour l'élément payment-element */
+#payment-element {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.frame-container {
+    /* Ajoutez vos styles de cadre ici */
+    width: 50%;
+    border: 2px solid #e344;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Styles pour l'élément stripe-element */
+.stripe-element {
+    width: 75%;
+    width: 75%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #e344;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+/* Styles supplémentaires pour l'élément card-element */
+.card-element {
+    height: 40px;
+    line-height: 40px;
+    height: 40px;
+    line-height: 40px;
+}
+
+/* Styles pour l'élément cardType */
+#cardType {
+    width: 57%;
+    padding: 10px;
+    border: 2px solid #e333;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+/* Styles pour l'élément postalCode */
+#postalCode {
+    width: 57%;
+    padding: 10px;
+    border: 2px solid #e333;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Styles pour le bouton submit */
+#submit {
+    padding: 10px 20px;
+    margin-left: 390px;
+    background-color: #52b788;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    /* Effet de survol pour le bouton submit */
+    #submit:hover {
+        background-color: #9d4edd;
+    }
+
+
+    /* Effet de survol pour le bouton submit */
+    #submit:hover {
+        background-color: #9d4edd;
+    }
+
+/* Shopping Cart */
+.table2 {
+    width: 50%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+}
+
+    .table2 th,
+    .table2 td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #000;
+    }
+
+    .table2 th {
+        background-color: #f2f2f2;
+    }
+
+    .table2 tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+/* Hotfix Section */
+/*Explanation: For some reason, if we did not have create this class, some buttons would not work. It is a hotfix as it is not the main priority to investigate further given the other things that need to be fixed.*/
+.btn-hotfix 
+{
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 0;
+    color: #1f1f1f;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5rem;
+    padding: .875rem 1.75rem;
+    text-align: center;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    vertical-align: middle
+}
+
+.disabled 
+{
+    cursor: not-allowed;
+}
+
+/*Explanation: Making sure that the images can remain an appropriate size.*/
+.detResize
+{
+    width: 450px;
+    border: medium 5px #000;
+}
+
+.indResize {
+    width: 100px;
+}
+
+.produit {
+    margin-bottom: 20px;
+}
